@@ -185,10 +185,6 @@ sub _do_request {
 
 	$request->header('User-Agent' => $self->_user_agent);
 
-	print STDERR "===============================================\n";
-	print STDERR $request->as_string;
-	print STDERR "===============================================\n";
-
 	my $ua = LWP::UserAgent->new();
 	my $response = $ua->request($request);
 	$self->http_status($response->code);
