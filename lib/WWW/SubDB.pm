@@ -8,6 +8,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use HTTP::Request::Common;
 use Digest::MD5 qw(md5_hex);
+use Params::Validate qw(:all);
 
 
 has '_endpoint' => (
@@ -100,6 +101,8 @@ sub languages {
 
 sub search {
 	my ($self, $file, $versions) = @_;
+	shift @_;
+	validate_pos(@_, { type => SCALAR }, { type => SCALAR , optional => 1 );
 	$versions ||= 0;
 
 	return undef if (!$self->_valid_file($file));
@@ -115,6 +118,8 @@ sub search {
 
 sub download {
 	my ($self, $file, @langs) = @_;
+	shift @_;
+	validate_pos(@_, { type => SCALAR }, { type => SCALAR } );
 	my $lang = join(',', @langs);
 	return undef if (!$self->_valid_file($file));
 	my $file_hash = $self->_file_hash($file);
