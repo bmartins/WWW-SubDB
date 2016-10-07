@@ -102,7 +102,7 @@ sub languages {
 sub search {
 	my ($self, $file, $versions) = @_;
 	shift @_;
-	validate_pos(@_, { type => SCALAR }, { type => SCALAR , optional => 1 );
+	validate_pos(@_, { type => SCALAR }, { type => SCALAR , optional => 1 });
 	$versions ||= 0;
 
 	return undef if (!$self->_valid_file($file));
