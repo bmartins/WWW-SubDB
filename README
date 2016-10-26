@@ -1,55 +1,90 @@
-WWW-SubDB
+NAME
+    WWW::SubDB - Interface to thesubdb.com API
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+VERSION
+    Version 0.01
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+SYNOPSIS
+    This module is an interface to <http://thesubdb.com> API. It allows to
+    search and download subtitles based on movie file hashes.
 
+        use WWW::SubDB;
 
-INSTALLATION
+        my $subdb = WWW::SubDB->new();
+        ...
 
-To install this module, run the following commands:
+SUBROUTINES/METHODS
+  new
+        my $subdb = WWW::SubDB->new()
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+        my $subdb = WWW::SubDB->new( debug => 1 )
 
-SUPPORT AND DOCUMENTATION
+    Initializes the object, with debug = 1, the sandbox SubDB API will be
+    used
 
-After installing, you can find documentation for this module with the
-perldoc command.
+  languages
+        my $lang = $subdb->languages()
 
-    perldoc WWW::SubDB
+    Returns the list of languages supported by SubDB. The result is a string
+    with languages separated by (,). Ex: en,es,fr,it,nl,pl,pt,ro,sv,tr
 
-You can also look for information at:
+  search
+        my $file = 'movie.mp4'
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-SubDB
+        my $result = $subdb->languages($file [,$versions])
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/WWW-SubDB
+    Returns a list of available subtitle languages for a given file. if
+    $versions is set to 1, returns the number of available versions for each
+    language. If there are no subtitles available, it will return undef.
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/WWW-SubDB
+  download
+        my $file = 'movie.mp4';
+        my $langs = 'en,pt';
+        my $subtitle = $subdb->download($file, $langs);
 
-    Search CPAN
-        http://search.cpan.org/dist/WWW-SubDB/
+    Return the subtitle for a given movie. It will return the first language
+    found according to $langs. Will return undef if not found.
 
+  upload
+        my $file = 'movie.mp4';
+        my $subtitle = 'movie.srt';
+
+        my $uploaded = $subdb->upload($file, $subtitle);
+
+    Will upload the subtitle file for the the given movie file.
+
+  http_status
+        $subdb->http_status()
+
+    Will show the last HTTP status code
+
+  error
+        $subdb->error()
+
+    Will show the last HTTP status line in case there was an error
+
+AUTHOR
+    Bruno Martins, "<=bscmartins at gmail.com>"
+
+    <https://twitter.com/b_martins>
+
+    <https://github.com/bmartins>
+
+BUGS
+    Please report any bugs or feature requests at
+    <https://github.com/bmartins/WWW-SubDB>
+
+SUPPORT
+    You can find documentation for this module with the perldoc command.
+
+        perldoc WWW::SubDB
 
 LICENSE AND COPYRIGHT
+    Copyright 2016 Bruno Martins.
 
-Copyright (C) 2015 Bruno Martins
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of either: the GNU General Public License as published
+    by the Free Software Foundation; or the Artistic License.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
+    See http://dev.perl.org/licenses/ for more information.
 
