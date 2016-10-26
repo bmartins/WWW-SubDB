@@ -54,7 +54,7 @@ sub _build__endpoint {
 
 =head1 NAME
 
-WWW::SubDB - The great new WWW::SubDB!
+WWW::SubDB - Interface to thesubdb.com API
 
 =head1 VERSION
 
@@ -67,31 +67,49 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
+This module is an interface to L<http://thesubdb.com> API. It allows to search and download subtitles based on movie file hashes.
 
     use WWW::SubDB;
 
-    my $foo = WWW::SubDB->new();
+    my $subdb = WWW::SubDB->new();
     ...
 
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
 
 =head1 SUBROUTINES/METHODS
 
-=head2 function1
+=head2 new
+
+    my $subdb = WWW::SubDB->new()
+
+    my $subdb = WWW::SubDB->new( debug => 1 )
+
+Initializes the object, with debug = 1, the sandbox SubDB API will be used
 
 =cut
 
 
 
-=head2 function2
+=head2 languages
+
+    my $lang = $subdb->languages()
+
+Returns the list of languages supported by SubDB. The result is a string with languages separated by (,). Ex: en,es,fr,it,nl,pl,pt,ro,sv,tr
 
 =cut
+
+
+=head2 search
+
+    my $file = 'movie.mp4'
+
+    my $result = $subdb->languages($file [,$versions])
+
+
+Returns a list of available subtitle languages for a given file. if $versions is set to 1, returns the number of available versions for each language. If there are no subtitles available, it will return undef.
+
+
+=cut
+
 
 sub languages {
 	my ($self) = @_;
@@ -116,6 +134,17 @@ sub search {
 	return $self->_do_request($request);
 }
 
+=head2 download
+
+    my $file = 'movie.mp4';
+    my $langs = 'en,pt';
+    my $subtitle = $subdb->download($file, $langs);
+
+Return the subtitle for a given movie. It will return the first language found according to $langs. Will return undef if not found.
+
+
+=cut
+
 sub download {
 	my ($self, $file, @langs) = @_;
 	shift @_;
@@ -128,6 +157,35 @@ sub download {
 	return $self->_do_request($request);
 
 }
+
+=head2 upload
+
+    my $file = 'movie.mp4';
+    my $subtitle = 'movie.srt';
+
+    my $uploaded = $subdb->upload($file, $subtitle);
+
+
+Will upload the subtitle file for the the given movie file.
+
+
+=cut
+
+=head2 http_status
+
+    $subdb->http_status()
+
+Will show the last HTTP status code
+
+=cut
+
+=head2 error
+
+    $subdb->error() 
+
+Will show the last HTTP status line in case there was an error 
+
+=cut
 
 sub upload {
 	my ($self, $file, $subtitle_file) = @_;
@@ -204,16 +262,15 @@ sub _do_request {
 
 =head1 AUTHOR
 
-Bruno Martins, C<< <=bscmartins at gmail.com> >>
+Bruno Martins, C<< <=bscmartins at gmail.com> >> 
+
+L<https://twitter.com/b_martins>
+
+L<https://github.com/bmartins>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-www-subdb at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=WWW-SubDB>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
+Please report any bugs or feature requests at  L<https://github.com/bmartins/WWW-SubDB>
 
 =head1 SUPPORT
 
@@ -222,35 +279,12 @@ You can find documentation for this module with the perldoc command.
     perldoc WWW::SubDB
 
 
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-SubDB>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/WWW-SubDB>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/WWW-SubDB>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/WWW-SubDB/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
+=cut
 
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2015 Bruno Martins.
+Copyright 2016 Bruno Martins.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
