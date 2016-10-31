@@ -47,7 +47,8 @@ if ($subdb->error) {
 
 open(my $fh, ">", $srt_file);
 print $fh $s;
-close($fh)
+close($fh);
+print "OK\n";
 
 
 
